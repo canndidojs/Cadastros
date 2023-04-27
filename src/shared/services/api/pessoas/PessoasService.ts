@@ -4,9 +4,9 @@ import { Api } from "../axios-config";
 
 interface IListagemPessoa {
     id: number;
-    nomeCompleto: string;
-    cidadeId: number;
     email: string;
+    cidadeId: number;
+    nomeCompleto: string;
 }
 
 interface IDetalhePessoa {
@@ -23,9 +23,10 @@ type TPessoasComTotalCount = {
 
 const getAll = async (page = 1, filter = ''): Promise<TPessoasComTotalCount | Error> => {
     try {
-        const urlRelativa = `/pessoas?__page=${page}&_limit=${Environment.LIMITE_DE_LINHAS}&nomeComplete_like${filter}`;
 
-        const { data, headers } = await Api.get('urlRelativa');                      // Paginando os dados /pessoas?__page=1&_limit=10
+        const urlRelativa = `/pessoas?__page=${page}&_limit=${Environment.LIMITE_DE_LINHAS}&nomeCompleto_like=${filter}`;
+
+        const { data, headers } = await Api.get(urlRelativa);                      
 
         if (data) {
             return {

@@ -2,8 +2,9 @@
     "pessoas": [
         {
             "id": 1,
-            "nome": "Fabricio",
-            "sobrenome": "Candido"
+            "cidadeId": 1,
+            "email": "fabricio@candido.com",
+            "nomeCompleto": "Fabricio Candido"
         }
     ]
 }
