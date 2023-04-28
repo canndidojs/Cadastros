@@ -1,10 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
-
-import { LayoutBaseDePagina } from "../../shared/layouts";
-import { FerramentasDeDetalhe } from "../../shared/components";
 import { useEffect, useState } from "react";
+import { Form } from "@unform/web";
+
 import { PessoasService } from "../../shared/services/api/pessoas/PessoasService";
-import { LinearProgress } from "@mui/material";
+import { FerramentasDeDetalhe } from "../../shared/components";
+import { LayoutBaseDePagina } from "../../shared/layouts";
+import { useNavigate, useParams } from "react-router-dom";
+import { VTextField } from "../../shared/forms";
 
 
 
@@ -28,7 +29,7 @@ export const DetalheDePessoas: React.FC = () => {
                         alert(result.message)
                         navigate('/pessoas')
                     } else {
-                        setNome((result.nomeCompleto))
+                        setNome((`Editando ${result.nomeCompleto}`))
                         console.log(result)
                     }
                 });
@@ -72,17 +73,25 @@ export const DetalheDePessoas: React.FC = () => {
 
                     aoCliclarEmSalvar={() => { }}
                     aoCliclarEmSalvarEFechar={() => { }}
-                    aoCliclarEmApagar={() =>  handleDelete(Number(id))}
+                    aoCliclarEmApagar={() => handleDelete(Number(id))}
                     aoCliclarEmVoltar={() => navigate('/pessoas')}
                     aoCliclarEmNovo={() => navigate('/pessoas/detalhe/nova')}
                 />
             }
         >
-            {isLoading && (
-                <LinearProgress variant='indeterminate' />
-            )}
 
-            <p>Detalhe de pessoas{id}</p>
+
+            <Form onSubmit={(dados) => console.log(dados)}>
+
+                <VTextField
+                    name='nomeCompleto'
+                />
+
+                <button type='submit'>Submit</button>
+
+
+            </Form>
+
         </LayoutBaseDePagina>
     );
 };
