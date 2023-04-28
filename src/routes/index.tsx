@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { useDrawerContext } from '../shared/contexts';
 import {
   Dashboard,
-  ListagemDePessoas
-
+  ListagemDePessoas,
+  DetalheDePessoas
 } from '../pages';
 
 export const AppRoutes = () => {
@@ -30,13 +30,11 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/pagina-inicial" element={<Dashboard />} />
-            /** Não cair para tela em branco sem sentido, sempre buscar a página inicial caso for digitado algo diferente na url. */
 
       <Route path="/pessoas" element={<ListagemDePessoas />} />
-      {/*<Route path="/pessoas/detalhe/:id" element={<Dashboard />} />*/}
+      <Route path="/pessoas/detalhe/:id" element={<DetalheDePessoas />} />
 
-      
       <Route path="*" element={<Navigate to="/pagina-inicial" />} />
     </Routes>
   );
-}
+};

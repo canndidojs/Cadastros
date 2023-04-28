@@ -10,7 +10,6 @@ export const useDebounce = (delay = 600, notDelayInFirstTime = true) => {
 
             isFirstTime.current = false;
             func();
-
         } else {
             
             if (debouncing.current) {
