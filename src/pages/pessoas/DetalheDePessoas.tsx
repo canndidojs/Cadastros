@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Box, Paper, Grid, Typography, LinearProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
+import * as yup from 'yup';
 
 
 import { PessoasService } from "../../shared/services/api/pessoas/PessoasService";
-import { VTextField, VForm, useVForm } from "../../shared/forms";
+import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
 import { FerramentasDeDetalhe } from "../../shared/components";
 import { LayoutBaseDePagina } from "../../shared/layouts";
 
@@ -14,6 +15,12 @@ interface IFormData {
     cidadeId: number,
     nomeCompleto: string,
 }
+
+const formValidation: yup.Schema<IFormData> = yup.object().shape({
+    cidadeId: yup.number().required(),
+    email: yup.string().required().email(),
+    nomeCompleto: yup.string().required().min(3),
+});
 
 
 export const DetalheDePessoas: React.FC = () => {
@@ -54,40 +61,56 @@ export const DetalheDePessoas: React.FC = () => {
 
 
     const handleSave = (dados: IFormData) => {
-        setIsLoading(true);
 
-        if (id === 'nova') {
-            PessoasService
-                .create(dados)
-                .then((result) => {
-                    setIsLoading(false);
+        formValidation.
+            validate(dados, { abortEarly: false })
+            .then((dadosValidados) => {
+                setIsLoading(true);
 
-                    if (result instanceof Error) {
-                        alert(result.message)
-                    } else {
-                        if (isSaveAndClose()) {
-                            navigate('/pessoas');
-                        } else {
-                            navigate(`/pessoas/detalhe/${result}`);
-                        }
-                    }
+                if (id === 'nova') {
+                    PessoasService
+                        .create(dadosValidados)
+                        .then((result) => {
+                            setIsLoading(false);
+
+                            if (result instanceof Error) {
+                                alert(result.message)
+                            } else {
+                                if (isSaveAndClose()) {
+                                    navigate('/pessoas');
+                                } else {
+                                    navigate(`/pessoas/detalhe/${result}`);
+                                }
+                            }
+                        });
+                } else {
+                    PessoasService
+                        .updateById(Number(id), { id: Number(id), ...dadosValidados })
+                        .then((result) => {
+                            setIsLoading(false);
+
+                            if (result instanceof Error) {
+                                alert(result.message);
+                            } else {
+                                if (isSaveAndClose()) {
+                                    navigate('/pessoas');
+                                }
+                            }
+                        });
+                }
+            })
+            .catch((errors: yup.ValidationError) => {
+                const validationErrors: IVFormErrors = {};
+
+                errors.inner.forEach(error => {
+                    if (!error.path) return;
+
+                    validationErrors[error.path] = error.message;
                 });
-        } else {
-            PessoasService
-                .updateById(Number(id), { id: Number(id), ...dados })
-                .then((result) => {
-                    setIsLoading(false);
 
-                    if (result instanceof Error) {
-                        alert(result.message);
-                    } else {
-                        if (isSaveAndClose()) {
-                            navigate('/pessoas');
-                        }
-                    }
-                });
-        }
-    }
+                formRef.current?.setErrors(validationErrors);
+            });
+    };
 
 
     const handleDelete = (id: number) => {
