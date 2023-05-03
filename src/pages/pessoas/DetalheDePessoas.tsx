@@ -1,15 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { Form } from "@unform/web";
+import { useEffect, useState } from "react";
 import { Box, Paper, Grid, Typography, LinearProgress } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 import { PessoasService } from "../../shared/services/api/pessoas/PessoasService";
+import { VTextField, VForm, useVForm } from "../../shared/forms";
 import { FerramentasDeDetalhe } from "../../shared/components";
 import { LayoutBaseDePagina } from "../../shared/layouts";
-import { useNavigate, useParams } from "react-router-dom";
-import { VTextField } from "../../shared/forms";
-import { FormHandles } from "@unform/core";
-
 
 
 interface IFormData {
@@ -19,12 +16,11 @@ interface IFormData {
 }
 
 
-
 export const DetalheDePessoas: React.FC = () => {
+    const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
     const { id = 'nova' } = useParams<'id'>();
     const navigate = useNavigate();
 
-    const formRef = useRef<FormHandles>(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const [nome, setNome] = useState('');
@@ -47,9 +43,14 @@ export const DetalheDePessoas: React.FC = () => {
                         formRef.current?.setData(result);
                     }
                 });
+        } else {
+            formRef.current?.setData({
+                nomeCompleto: '',
+                cidadeId: '',
+                email: '',
+            });
         }
     }, [id])
-
 
 
     const handleSave = (dados: IFormData) => {
@@ -64,17 +65,25 @@ export const DetalheDePessoas: React.FC = () => {
                     if (result instanceof Error) {
                         alert(result.message)
                     } else {
-                        navigate(`/pessoas/detalhe/${result}`)
+                        if (isSaveAndClose()) {
+                            navigate('/pessoas');
+                        } else {
+                            navigate(`/pessoas/detalhe/${result}`);
+                        }
                     }
                 });
         } else {
             PessoasService
                 .updateById(Number(id), { id: Number(id), ...dados })
                 .then((result) => {
-                    setIsLoading(false)
+                    setIsLoading(false);
 
                     if (result instanceof Error) {
-                        alert(result.message)
+                        alert(result.message);
+                    } else {
+                        if (isSaveAndClose()) {
+                            navigate('/pessoas');
+                        }
                     }
                 });
         }
@@ -106,16 +115,17 @@ export const DetalheDePessoas: React.FC = () => {
                     mostrarBotaoNovo={id !== 'nova'}
                     mostrarBotaoApagar={id !== 'nova'}
 
-                    aoCliclarEmApagar={() => handleDelete(Number(id))}
+                    aoCliclarEmSalvar={save}
+                    aoCliclarEmSalvarEFechar={saveAndClose}
                     aoCliclarEmVoltar={() => navigate('/pessoas')}
-                    aoCliclarEmSalvar={() => formRef.current?.submitForm()}
+                    aoCliclarEmApagar={() => handleDelete(Number(id))}
                     aoCliclarEmNovo={() => navigate('/pessoas/detalhe/nova')}
-                    aoCliclarEmSalvarEFechar={() => formRef.current?.submitForm()}
                 />
             }
         >
 
-            <Form ref={formRef} onSubmit={handleSave}>
+
+            <VForm ref={formRef} onSubmit={handleSave}>
                 <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
 
 
@@ -166,7 +176,8 @@ export const DetalheDePessoas: React.FC = () => {
                     </Grid>
 
                 </Box>
-            </Form>
+            </VForm>
+
 
         </LayoutBaseDePagina>
     );
