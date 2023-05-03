@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { PessoasService, IListagemPessoa } from "../../shared/services/api/pessoas/PessoasService";
+import { CidadesService, IListagemCidade } from "../../shared/services/api/cidades/CidadesService";
 import { FerramentasDaListagem } from "../../shared/components";
 import { LayoutBaseDePagina } from "../../shared/layouts";
 import { Environment } from "../../shared/environment";
@@ -9,12 +9,12 @@ import { useDebounce } from "../../shared/hooks";
 
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, LinearProgress, Pagination, IconButton, Icon } from "@mui/material";
 
-export const ListagemDePessoas: React.FC = () => {
+export const ListagemDeCidades: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { debounce } = useDebounce();
     const navigate = useNavigate();
 
-    const [rows, setRows] = useState<IListagemPessoa[]>([]);
+    const [rows, setRows] = useState<IListagemCidade[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [totalCount, setTotalCount] = useState(0);
 
@@ -30,7 +30,7 @@ export const ListagemDePessoas: React.FC = () => {
         setIsLoading(true);
 
         debounce(() => {
-            PessoasService.getAll(pagina, busca)
+            CidadesService.getAll(pagina, busca)
                 .then((result) => {
                     setIsLoading(false);
 
@@ -49,7 +49,7 @@ export const ListagemDePessoas: React.FC = () => {
     const handleDelete = (id: number) => {
 
         if (confirm('Deseja apagar?')) {
-            PessoasService.deleteById(id)
+            CidadesService.deleteById(id)
                 .then(result => {
                     if (result instanceof Error) {
                         alert(result.message);
@@ -63,19 +63,17 @@ export const ListagemDePessoas: React.FC = () => {
                     }
                 });
         }
-
     }
-
 
     return (
         <LayoutBaseDePagina
-            titulo='Listagem de pessoas'
+            titulo='Listagem de cidades'
             barraDeFerramentas={
                 <FerramentasDaListagem
                     mostrarInputBusca
                     textoDaBusca={busca}
                     textoBotaoNovo='Nova'
-                    aoClicarEmNovo={() => navigate('/pessoas/detalhe/nova')}
+                    aoClicarEmNovo={() => navigate('/cidades/detalhe/nova')}
                     aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
                 />
             }
@@ -85,8 +83,7 @@ export const ListagemDePessoas: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell width={100}>Ações</TableCell>
-                            <TableCell width={200}>Nome completo</TableCell>
-                            <TableCell>E-mail</TableCell>
+                            <TableCell>Cidades</TableCell>
                         </TableRow>
                     </TableHead>
 
@@ -98,12 +95,11 @@ export const ListagemDePessoas: React.FC = () => {
                                         <Icon>delete</Icon>
                                     </IconButton>
 
-                                    <IconButton size="small" onClick={() => navigate(`/pessoas/detalhe/${row.id}`)}>
+                                    <IconButton size="small" onClick={() => navigate(`/cidades/detalhe/${row.id}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </TableCell>
-                                <TableCell>{row.nomeCompleto}</TableCell>
-                                <TableCell>{row.email}</TableCell>
+                                <TableCell>{row.nome}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -116,12 +112,10 @@ export const ListagemDePessoas: React.FC = () => {
                         {isLoading && (
                             <TableRow>
                                 <TableCell colSpan={3} sx={{ p: 0 }}>
-
                                     <LinearProgress variant='indeterminate' />
                                 </TableCell>
                             </TableRow>
                         )}
-
 
                         {(totalCount > Environment.LIMITE_DE_LINHAS) && (
                             <TableRow>
@@ -130,7 +124,6 @@ export const ListagemDePessoas: React.FC = () => {
                                         page={pagina}
                                         count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHAS)}
                                         onChange={(e, newPage) => setSearchParams({ pagina: newPage.toString(), busca })}
-
 
                                         shape="rounded"
                                         sx={{ p: 1 }}
