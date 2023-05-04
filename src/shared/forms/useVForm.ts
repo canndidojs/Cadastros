@@ -1,55 +1,50 @@
-import { FormHandles } from "@unform/core";
+import { FormHandles } from '@unform/core';
 import { useCallback, useRef } from 'react';
 
+
 export const useVForm = () => {
-    const formRef = useRef<FormHandles>(null);
+  const formRef = useRef<FormHandles>(null);
 
-    const isSavingAndClose = useRef(false);
-    const isSavingAndNew = useRef(false);
-
-
-
-    const handleSave = useCallback(() => {
-        isSavingAndClose.current = false;
-        isSavingAndNew.current = false;
-        formRef.current?.submitForm();
-    }, []);
+  const isSavingAndClose = useRef(false);
+  const isSavingAndNew = useRef(false);
 
 
+  const handleSave = useCallback(() => {
+    isSavingAndClose.current = false;
+    isSavingAndNew.current = false;
+    formRef.current?.submitForm();
+  }, []);
 
-    const handleSaveAndNew = useCallback(() => {
-        isSavingAndClose.current = false;
-        isSavingAndNew.current = true;
-        formRef.current?.submitForm();
-    }, []);
+  const handleSaveAndNew = useCallback(() => {
+    isSavingAndClose.current = false;
+    isSavingAndNew.current = true;
+    formRef.current?.submitForm();
+  }, []);
 
-    const handleSaveAndClose = useCallback(() => {
-        isSavingAndClose.current = true;
-        isSavingAndNew.current = false;
-        formRef.current?.submitForm();
-    }, []);
-
-
-
-    const handleIsSaveAndNew = useCallback(() => {
-        return isSavingAndNew.current;
-    }, []);
-    
-    const handleIsSaveAndClose = useCallback(() => {
-        return isSavingAndClose.current;
-    }, []);
+  const handleSaveAndClose = useCallback(() => {
+    isSavingAndClose.current = true;
+    isSavingAndNew.current = false;
+    formRef.current?.submitForm();
+  }, []);
 
 
+  const handleIsSaveAndNew = useCallback(() => {
+    return isSavingAndNew.current;
+  }, []);
 
-    return {
-        formRef,
+  const handleIsSaveAndClose = useCallback(() => {
+    return isSavingAndClose.current;
+  }, []);
 
-        save: handleSave,
 
-        saveAndNew: handleSaveAndNew,
-        saveAndClose: handleSaveAndClose,
+  return {
+    formRef,
 
-        isSaveAndNew: handleIsSaveAndNew,
-        isSaveAndClose: handleIsSaveAndClose,
-    };
-}
+    save: handleSave,
+    saveAndNew: handleSaveAndNew,
+    saveAndClose: handleSaveAndClose,
+
+    isSaveAndNew: handleIsSaveAndNew,
+    isSaveAndClose: handleIsSaveAndClose,
+  };
+};
