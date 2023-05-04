@@ -19,12 +19,6 @@
       "cidadeId": 7
     },
     {
-      "id": 4,
-      "nomeCompleto": "Alfredo",
-      "email": "alfredo@gmail.com",
-      "cidadeId": 7
-    },
-    {
       "id": 5,
       "nomeCompleto": "Dudu",
       "email": "rocha@dudu.com",
@@ -67,10 +61,6 @@
     {
       "nome": "aaaaaa",
       "id": 9
-    },
-    {
-      "nome": "dsdsdsds",
-      "id": 10
     }
   ]
 }

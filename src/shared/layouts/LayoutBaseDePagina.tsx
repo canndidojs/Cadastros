@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Typography, useTheme, IconButton, Icon, useMediaQuery, Theme } from '@mui/material'
+import { Typography, useTheme, IconButton, Icon, useMediaQuery, Theme, Avatar } from '@mui/material'
 import { Box } from '@mui/system'
 
 import { useDrawerContext } from '../contexts';
@@ -26,17 +26,15 @@ export const LayoutBaseDePagina: React.FC<ILayoutBaseDePaginaProps> = ({ childre
                     </IconButton>
                 )}
 
-                <Typography 
-                overflow="hidden"
-                whiteSpace="nowrap"
-                textOverflow="ellipsis"
-                variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
+                <Typography
+                    overflow="hidden"
+                    whiteSpace="nowrap"
+                    textOverflow="ellipsis"
+                    variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
                 >
                     {titulo}
                 </Typography>
             </Box>
-
-
 
 
             {barraDeFerramentas && (<Box>

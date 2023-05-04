@@ -4,7 +4,6 @@ import { useAppThemeContext, useDrawerContext } from "../../contexts";
 import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 
 
-
 interface IListItemLinkProps {
     to: string;
     label: string;
@@ -38,6 +37,8 @@ export const MenuLateral: React.FC = ({ children }) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const navigate = useNavigate();
+
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
     const { toggleTheme } = useAppThemeContext();
 
@@ -70,7 +71,18 @@ export const MenuLateral: React.FC = ({ children }) => {
                             ))}
                         </List>
                     </Box>
-
+                    <Divider />
+                    <Box>
+                        <List component="nav">
+                            <ListItemButton onClick={() => navigate('./pessoas')}>
+                                <ListItemIcon>
+                                    <Icon>account_circle</Icon>
+                                </ListItemIcon>
+                                <ListItemText primary="Perfil" />
+                            </ListItemButton>
+                        </List>
+                    </Box>
+                    <Divider />
                     <Box>
                         <List component="nav">
                             <ListItemButton onClick={toggleTheme}>
