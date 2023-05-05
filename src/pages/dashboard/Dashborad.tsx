@@ -29,7 +29,7 @@ export const Dashboard = () => {
                 }
             });
 
-            PessoasService.getAll()
+        PessoasService.getAll()
             .then((result) => {
                 setIsLoadingPessoas(false);
 
@@ -62,13 +62,13 @@ export const Dashboard = () => {
 
                                     <Box p={6} display='flex' justifyContent='center' alignItems='center'>
                                         {!isLoadingCidades && (
-                                        <Typography variant='h2'>
-                                            {totalCountCidades}
-                                        </Typography>)}
+                                            <Typography variant='h2'>
+                                                {totalCountCidades}
+                                            </Typography>)}
 
 
-                                        { isLoadingCidades && (
-                                         <Typography variant='h6'>
+                                        {isLoadingCidades && (
+                                            <Typography variant='h6'>
                                                 Carregando...
                                             </Typography>
                                         )}
@@ -85,14 +85,14 @@ export const Dashboard = () => {
                                     </Typography>
 
                                     <Box p={6} display='flex' justifyContent='center' alignItems='center'>
-                                    {!isLoadingPessoas && (
-                                        <Typography variant='h2'>
-                                            {totalCountPessoas}
-                                        </Typography>)}
+                                        {!isLoadingPessoas && (
+                                            <Typography variant='h2'>
+                                                {totalCountPessoas}
+                                            </Typography>)}
 
 
-                                        { isLoadingPessoas && (
-                                         <Typography variant='h6'>
+                                        {isLoadingPessoas && (
+                                            <Typography variant='h6'>
                                                 Carregando...
                                             </Typography>
                                         )}

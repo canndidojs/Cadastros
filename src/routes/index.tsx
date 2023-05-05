@@ -8,6 +8,7 @@ import {
   DetalheDePessoas,
   DetalheDeCidades,
   ListagemDeCidades,
+  PerfilUsuario
 } from '../pages';
 
 export const AppRoutes = () => {
@@ -45,6 +46,8 @@ export const AppRoutes = () => {
       <Route path="/cidades" element={<ListagemDeCidades/>} />
       <Route path="/cidades/detalhe/:id" element={<DetalheDeCidades />} />
 
+      <Route path="/perfil" element={<PerfilUsuario/>} />
+      
       <Route path="*" element={<Navigate to="/pagina-inicial" />} />
     </Routes>
   );

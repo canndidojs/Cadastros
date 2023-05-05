@@ -74,9 +74,9 @@ export const MenuLateral: React.FC = ({ children }) => {
                     <Divider />
                     <Box>
                         <List component="nav">
-                            <ListItemButton onClick={() => navigate('./pessoas')}>
+                            <ListItemButton onClick={() => navigate('./perfil')}>
                                 <ListItemIcon>
-                                    <Icon>account_circle</Icon>
+                                    <Avatar alt='Foto do usuário' src="https://avatars.githubusercontent.com/u/92770299?v=4" sx={{ width: 30, height: 30 }} />
                                 </ListItemIcon>
                                 <ListItemText primary="Perfil" />
                             </ListItemButton>
