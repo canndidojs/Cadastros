@@ -1,66 +1,9 @@
 {
-  "pessoas": [
-    {
-      "id": 1,
-      "nomeCompleto": "teste",
-      "email": "cf.pessoal13@gmail.com",
-      "cidadeId": 2
-    },
-    {
-      "id": 2,
-      "nomeCompleto": "Fabricio Candido",
-      "email": "cf.pessoal13@gmail.com",
-      "cidadeId": 5
-    },
-    {
-      "id": 3,
-      "nomeCompleto": "Candido",
-      "email": "candido@gmail.com",
-      "cidadeId": 7
-    },
-    {
-      "id": 5,
-      "nomeCompleto": "Dudu",
-      "email": "rocha@dudu.com",
-      "cidadeId": 7
-    }
-  ],
+  "pessoas": [],
   "cidades": [
     {
       "id": 1,
-      "nome": "Porto Alegre"
-    },
-    {
-      "id": 2,
-      "nome": "Sapucaia do Sul"
-    },
-    {
-      "nome": "Dois Irmaos",
-      "id": 3
-    },
-    {
-      "nome": "São Leopoldo",
-      "id": 4
-    },
-    {
-      "nome": "Novo Hamburgo",
-      "id": 5
-    },
-    {
-      "nome": "São Borja",
-      "id": 6
-    },
-    {
-      "nome": "Caxias",
-      "id": 7
-    },
-    {
-      "nome": "Tramandai",
-      "id": 8
-    },
-    {
-      "nome": "aaaaaa",
-      "id": 9
+      "nome": "aaaaaaaa"
     }
   ]
 }

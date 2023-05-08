@@ -6,6 +6,7 @@ import { FerramentasDaListagem } from "../../shared/components";
 import { LayoutBaseDePagina } from "../../shared/layouts";
 import { Environment } from "../../shared/environment";
 import { useDebounce } from "../../shared/hooks";
+import { Alert, Snackbar } from '@mui/material'
 
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, LinearProgress, Pagination, IconButton, Icon } from "@mui/material";
 
@@ -17,6 +18,8 @@ export const ListagemDePessoas: React.FC = () => {
     const [rows, setRows] = useState<IListagemPessoa[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [totalCount, setTotalCount] = useState(0);
+
+    const [showAlertDelete, setShowAlertDelete] = useState(false);
 
     const busca = useMemo(() => {
         return searchParams.get('busca') || '';
@@ -59,13 +62,12 @@ export const ListagemDePessoas: React.FC = () => {
                                 ...oldRows.filter(oldRow => oldRow.id !== id)
                             ]
                         });
-                        alert('Registro apagado!')
+                        setShowAlertDelete(true);
                     }
                 });
         }
 
     }
-
 
     return (
         <LayoutBaseDePagina
@@ -122,7 +124,6 @@ export const ListagemDePessoas: React.FC = () => {
                             </TableRow>
                         )}
 
-
                         {(totalCount > Environment.LIMITE_DE_LINHAS) && (
                             <TableRow>
                                 <TableCell colSpan={3} sx={{ p: 0 }}>
@@ -141,6 +142,14 @@ export const ListagemDePessoas: React.FC = () => {
                     </TableFooter>
                 </Table>
             </TableContainer>
+
+            {showAlertDelete && (
+                <Snackbar open={showAlertDelete} autoHideDuration={5000} onClose={() => setShowAlertDelete(false)}>
+                    <Alert onClose={() => setShowAlertDelete(false)} severity="success" sx={{ width: '100%' }}>
+                        Registro apagado com sucesso!
+                    </Alert>
+                </Snackbar>
+            )}
         </LayoutBaseDePagina >
     );
 };
