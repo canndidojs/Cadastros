@@ -5,6 +5,12 @@
       "email": "cf.pessoal13@gmail.com",
       "cidadeId": 1,
       "id": 1
+    },
+    {
+      "nomeCompleto": "Nicole Clós",
+      "email": "nicoles@gmail.com",
+      "cidadeId": 2,
+      "id": 2
     }
   ],
   "cidades": [
