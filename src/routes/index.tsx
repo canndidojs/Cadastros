@@ -48,6 +48,8 @@ export const AppRoutes = () => {
 
       <Route path="/perfil" element={<PerfilUsuario/>} />
       
+      <Route path="/perfil" element={<PerfilUsuario/>} />
+      
       <Route path="*" element={<Navigate to="/pagina-inicial" />} />
     </Routes>
   );
