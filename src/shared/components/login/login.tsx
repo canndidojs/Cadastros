@@ -1,15 +1,32 @@
-import { Box, Grid, Link, Typography, Button, ThemeProvider, CssBaseline, createTheme, Paper, Avatar, TextField as VTextField, List, Icon, ListItemButton, ListItemIcon, ListItemText, FormControlLabel, Checkbox } from "@mui/material";
-import { blue } from '@mui/material/colors'
+import { useState } from "react";
+import * as yup from 'yup';
+import { Box, Grid, Link, Typography, Button, Divider, createTheme, Avatar, TextField, IconButton, useMediaQuery } from "@mui/material";
 import { useAppThemeContext, useAuthContext } from "../../contexts";
-import { LockOutlined } from "@mui/icons-material";
+import { Brightness6, LockOutlined } from "@mui/icons-material";
+import { blue } from '@mui/material/colors'
+
+const loginSchema = yup.object().shape({
+    email: yup.string().email().required(),
+    password: yup.string().required().min(5),
+})
 
 interface ILoginProps {
     children: React.ReactNode;
 }
 
 export const Login: React.FC<ILoginProps> = ({ children }) => {
-    const { isAuthenticated } = useAuthContext();
     const { toggleTheme } = useAppThemeContext();
+    const { isAuthenticated, login } = useAuthContext();
+    const theme = createTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const [passwordError, setPasswordError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    
+    const [isLoading, setIsLoading] = useState(false);
 
     if (isAuthenticated) {
         return (
@@ -19,127 +36,134 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
 
     function Copyright() {
         return (
-            <Typography component={Box} variant="body2" color="text.secondary" display='flex' bottom={2} position='absolute' >
-                {'Copyright © '}
-                <Link color="inherit" href="https://github.com/canndidojs ">
+            <Typography component={Box} variant="body2" display='flex' bottom={2} position='absolute' >
+                {''}
+                <Link color="inherit" href="    https://github.com/canndidojs">
                     Desenvolvido por Candido
-                </Link>{' '}
+                </Link>{'  /  '}
                 {new Date().getFullYear()}
                 {'.'}
             </Typography>
         );
     }
 
-    const theme = createTheme();
+    const handleSubmit = () => {
+        setIsLoading(true);
 
+        loginSchema
+            .validate({ email, password }, {abortEarly: false})
+            .then(dadosValidados => {
+                login(dadosValidados.email, dadosValidados.password)
+                .then(()=>{
+                    setIsLoading(false)
+                })
+            })
+            .catch((errors: yup.ValidationError) => {
 
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        const data = new FormData(e.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+                errors.inner.forEach(error => {
+                    if (error.path === 'email') {
+                        setEmailError(error.message)
+                    } else if (error.path === 'password') {
+                        setPasswordError(error.message)
+                    }
+                    
+                })
+            });
     };
 
     return (
-        <ThemeProvider theme={theme} >
-            <Grid container component="main" sx={{ height: '100vh' }}>
-                <CssBaseline />
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
+        <Grid container component="main" sx={{ height: '100vh' }}>
+            <Grid
+                item
+                xs={false}
+                lg={7}
+                sm={false}
+                md={false}
+                sx={{
+                    backgroundImage: 'url(https://images.unsplash.com/photo-1556155092-490a1ba16284?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80)',
+                }}
+            />
+            <Grid item xs={12} sm={12} lg={5} md={12} display='flex' justifyContent='center' alignItems='center' overflow='hidden'>
+                <Box
                     sx={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1556155092-490a1ba16284?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
+                        my: 8,
+                        mx: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
                     }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square display='flex' justifyContent='center' alignItems='center' >
-                    <Box
-                        sx={{
-                            my: 8,
-                            mx: 4,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Avatar sx={{ m: 1, bgcolor: blue[800] }}>
-                            <LockOutlined />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Cadastros
-                        </Typography>
-                        <Box display='flex' width={400} flexDirection='column' alignItems='center' component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                            <VTextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="E-mail"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                            />
-                            <VTextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Senha"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                            />
-                            {/* <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            /> */}
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{
-                                    mt: 3, mb:
-                                        2
-                                }}
-                            >
-                                Entrar
-                            </Button>
-                            <Grid container display='flex' flexDirection='column' alignItems='center' >
-                                <Grid item xs justifyContent='center'>
-                                    <Link href="#" variant="body2">
-                                        Esqueceu sua senha?
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link href="#" variant="body2">
-                                        {"Ainda não tem conta? Crie uma"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
+                >
+                    <Avatar sx={{ m: 1, bgcolor: blue[800] }}>
+                        <LockOutlined />
+                    </Avatar>
+                    <Typography variant="h5" >
+                        Cadastros
+                    </Typography>
+                    <Box display='flex' width={smDown ? 200 : 400} flexDirection='column' alignItems='center' component="form" sx={{ mt: 1 }}>
+                        <TextField
+                            onChange={e => setEmail(e.target.value)}
+                            onKeyDown={_ => setEmailError('')}
+                            autoComplete="email"
+                            margin="normal"
+                            label="E-mail"
+                            name="email"
+                            type='email'
+                            value={email}
+                            error={!!emailError}
+                            helperText={emailError}
+                            fullWidth
+                        />
+                        <TextField
+                            onChange={e => setPassword(e.target.value)}
+                            onKeyDown={_ => setPasswordError('')}
+                            autoComplete="current-password"
+                            value={password}
+                            error={!!passwordError}
+                            helperText={passwordError}
+                            name="password"
+                            margin="normal"
+                            type="password"
+                            label="Senha"
+                            fullWidth
+                        />
+                        <Button
+                            type="submit"
+                            onClick={handleSubmit}
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                mt: 3, mb:
+                                    2
+                            }}
+                        >
+                            Entrar
+                        </Button>
 
-                            <Box flex={1}>
-                                <List component="nav">
-                                    <ListItemButton onClick={toggleTheme}>
-                                        <ListItemIcon>
-                                            <Icon>dark_mode</Icon>
-                                        </ListItemIcon>
-                                        <ListItemText primary="Alternar tema" />
-                                    </ListItemButton>
-                                </List>
-                            </Box>
-                            <Copyright />
+                        <Divider />
+
+                        <Grid container display='flex' flexDirection='column' alignItems='center' >
+                            <Grid item xs justifyContent='center'>
+                                <Link href="#" variant="body2">
+                                    Esqueceu sua senha?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2">
+                                    {"Ainda não tem conta? Crie uma"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+
+                        <Copyright />
+
+                        <Box display='flex'  >
+                            <IconButton aria-label="toggleTheme" onClick={toggleTheme} size='large'>
+                                <Brightness6 />
+                            </IconButton>
                         </Box>
                     </Box>
-                </Grid>
+                </Box>
             </Grid>
-        </ThemeProvider>
+        </Grid>
     );
 }
