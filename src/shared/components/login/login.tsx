@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as yup from 'yup';
-import { Box, Grid, Link, Typography, Button, Divider, createTheme, Avatar, TextField, IconButton, useMediaQuery } from "@mui/material";
+import { Box, Grid, Link, Typography, Button, Divider, createTheme, Avatar, TextField, IconButton, useMediaQuery, CircularProgress } from "@mui/material";
 import { useAppThemeContext, useAuthContext } from "../../contexts";
 import { Brightness6, LockOutlined } from "@mui/icons-material";
 import { blue } from '@mui/material/colors'
@@ -15,24 +15,24 @@ interface ILoginProps {
 }
 
 export const Login: React.FC<ILoginProps> = ({ children }) => {
-    const { toggleTheme } = useAppThemeContext();
     const { isAuthenticated, login } = useAuthContext();
-    const theme = createTheme();
-    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const theme = createTheme();
+    const { toggleTheme } = useAppThemeContext();
+
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [passwordError, setPasswordError] = useState('');
     const [emailError, setEmailError] = useState('');
-    
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+
     const [isLoading, setIsLoading] = useState(false);
 
-    if (isAuthenticated) {
+    if (isAuthenticated)
         return (
             <>{children}</>
         );
-    }
 
     function Copyright() {
         return (
@@ -48,28 +48,29 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
     }
 
     const handleSubmit = () => {
-        setIsLoading(true);
+        setIsLoading(true)
 
         loginSchema
-            .validate({ email, password }, {abortEarly: false})
+            .validate({ email, password }, { abortEarly: false })
             .then(dadosValidados => {
                 login(dadosValidados.email, dadosValidados.password)
-                .then(()=>{
-                    setIsLoading(false)
-                })
+                    .then(() => {
+                        setIsLoading(false)
+                    })
             })
             .catch((errors: yup.ValidationError) => {
+                setIsLoading(false)
 
                 errors.inner.forEach(error => {
                     if (error.path === 'email') {
-                        setEmailError(error.message)
+                        setEmailError(error.message);
                     } else if (error.path === 'password') {
-                        setPasswordError(error.message)
+                        setPasswordError(error.message);
                     }
-                    
-                })
+                });
             });
     };
+
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
@@ -99,38 +100,37 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                     <Typography variant="h5" >
                         Cadastros
                     </Typography>
-                    <Box display='flex' width={smDown ? 200 : 400} flexDirection='column' alignItems='center' component="form" sx={{ mt: 1 }}>
+                    <Box display='flex' width={smDown ? 200 : 400} flexDirection='column' alignItems='center' onSubmit={(e) => { e.preventDefault(); handleSubmit()}} component="form" sx={{ mt: 1 }}>
                         <TextField
-                            onChange={e => setEmail(e.target.value)}
-                            onKeyDown={_ => setEmailError('')}
-                            autoComplete="email"
+                            disabled={isLoading}
                             margin="normal"
                             label="E-mail"
-                            name="email"
                             type='email'
                             value={email}
                             error={!!emailError}
                             helperText={emailError}
                             fullWidth
+                            onKeyDown={() => setEmailError('')}
+                            onChange={e => setEmail(e.target.value)}
                         />
                         <TextField
-                            onChange={e => setPassword(e.target.value)}
-                            onKeyDown={_ => setPasswordError('')}
-                            autoComplete="current-password"
+                            margin="normal"
                             value={password}
                             error={!!passwordError}
                             helperText={passwordError}
-                            name="password"
-                            margin="normal"
+                            disabled={isLoading}
                             type="password"
                             label="Senha"
                             fullWidth
+                            onKeyDown={() => setPasswordError('')}
+                            onChange={e => setPassword(e.target.value)}
                         />
                         <Button
                             type="submit"
                             onClick={handleSubmit}
                             fullWidth
                             variant="contained"
+                            endIcon={isLoading ? <CircularProgress variant='indeterminate' color='inherit' size={20} /> : undefined}
                             sx={{
                                 mt: 3, mb:
                                     2
