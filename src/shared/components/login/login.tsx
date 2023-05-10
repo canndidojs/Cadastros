@@ -6,7 +6,6 @@ import { Brightness6, LockOutlined } from "@mui/icons-material";
 import { blue } from '@mui/material/colors'
 import { ModalEsqueceuSenha } from "./ModalEsqueceuSenha";
 
-
 const loginSchema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required().min(5),
@@ -149,6 +148,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
 
                             <ModalEsqueceuSenha />
                             
+
                             </Grid>
                             <Grid item>
 

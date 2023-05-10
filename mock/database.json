@@ -11,6 +11,12 @@
       "email": "nicoles@gmail.com",
       "cidadeId": 2,
       "id": 2
+    },
+    {
+      "nomeCompleto": "Marciano Candido",
+      "email": "marciano@gmail.com",
+      "cidadeId": 2,
+      "id": 3
     }
   ],
   "cidades": [
@@ -21,6 +27,10 @@
     {
       "nome": "Sapucaia do Sul",
       "id": 2
+    },
+    {
+      "id": 3,
+      "nome": "tramandai do sul"
     }
   ],
   "auth": {
