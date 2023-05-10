@@ -4,6 +4,8 @@ import { Box, Grid, Link, Typography, Button, Divider, createTheme, Avatar, Text
 import { useAppThemeContext, useAuthContext } from "../../contexts";
 import { Brightness6, LockOutlined } from "@mui/icons-material";
 import { blue } from '@mui/material/colors'
+import { ModalEsqueceuSenha } from "./ModalEsqueceuSenha";
+
 
 const loginSchema = yup.object().shape({
     email: yup.string().email().required(),
@@ -17,6 +19,7 @@ interface ILoginProps {
 export const Login: React.FC<ILoginProps> = ({ children }) => {
     const { isAuthenticated, login } = useAuthContext();
 
+    
     const theme = createTheme();
     const { toggleTheme } = useAppThemeContext();
 
@@ -100,7 +103,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                     <Typography variant="h5" >
                         Cadastros
                     </Typography>
-                    <Box display='flex' width={smDown ? 200 : 400} flexDirection='column' alignItems='center' onSubmit={(e) => { e.preventDefault(); handleSubmit()}} component="form" sx={{ mt: 1 }}>
+                    <Box display='flex' width={smDown ? 200 : 400} flexDirection='column' alignItems='center' onSubmit={(e) => { e.preventDefault(); handleSubmit() }} component="form" sx={{ mt: 1 }}>
                         <TextField
                             disabled={isLoading}
                             margin="normal"
@@ -143,14 +146,12 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
 
                         <Grid container display='flex' flexDirection='column' alignItems='center' >
                             <Grid item xs justifyContent='center'>
-                                <Link href="#" variant="body2">
-                                    Esqueceu sua senha?
-                                </Link>
+
+                            <ModalEsqueceuSenha />
+                            
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
-                                    {"Ainda não tem conta? Crie uma"}
-                                </Link>
+
                             </Grid>
                         </Grid>
 
